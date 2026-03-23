@@ -10,7 +10,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url(/images/bgImg.jpg) no-repeat center center/cover;
+  background: url(./images/bgImg.jpg) no-repeat center center/cover;
 }
 
 .taskApp {
@@ -39,7 +39,7 @@ button {
 
 .taskBody {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   margin-top: 40px;
   padding: 2rem;
   display: flex;
@@ -56,4 +56,16 @@ button {
 li {
   margin: 10px;
   word-spacing: 5px;
+}
+select,
+option {
+  color: black;
+  border: 1px solid white;
+}
+
+#filteredBtn,
+button {
+  margin-top: 20px;
+  padding: 8px;
+  font-weight: bold;
 }

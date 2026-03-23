@@ -1,7 +1,10 @@
 const taskList = document.getElementById("taskList");
+const addTaskBtn = document.getElementById("addTaskBtn");
 let tasks = [];
 let taskId = 0;
-const addTaskBtn = document.getElementById("addTaskBtn");
+let btnContainer = document.getElementById("filteredBtn");
+let statuses = ["All", "In Progress", "Completed", "Overdue"];
+let currentFilter = "All";
 
 addTaskBtn.addEventListener("click", function () {
   let name = document.getElementById("taskInput").value;
@@ -23,22 +26,20 @@ addTaskBtn.addEventListener("click", function () {
     document.getElementById("category").value = "";
     document.getElementById("deadline").value = "";
     renderTask();
-    console.log(tasks);
+    // console.log(tasks);
   } else {
     alert("Please fill out the fields");
   }
 });
 
-function renderTask() {
+function renderTask(taskArray = tasks) {
   taskList.innerHTML = "";
-  for (let i = 0; i < tasks.length; i++) {
-    let task = tasks[i];
+  for (let i = 0; i < taskArray.length; i++) {
+    let task = taskArray[i];
     let today = new Date();
     let taskDate = new Date(task.deadline);
     today.setHours(0, 0, 0, 0);
     taskDate.setHours(0, 0, 0, 0);
-    // console.log(today);
-    // console.log(taskDate);
     if (today > taskDate && task.status !== "Completed") {
       task.status = "Overdue";
     }
@@ -61,6 +62,25 @@ function renderTask() {
   addSelectListeners();
 }
 
+statuses.forEach((status) => {
+  let btn = document.createElement("button");
+  btn.innerText = status;
+
+  btn.addEventListener("click", function () {
+    currentFilter = status;
+    filteredBy(status);
+  });
+  btnContainer.appendChild(btn);
+});
+
+function filteredBy(status) {
+  if (status === "All") {
+    renderTask(tasks);
+  } else {
+    let filtered = tasks.filter((task) => task.status === status);
+    renderTask(filtered);
+  }
+}
 function addSelectListeners() {
   const selects = document.querySelectorAll(".task_select_status");
   for (let i = 0; i < selects.length; i++) {
@@ -74,6 +94,7 @@ function addSelectListeners() {
         // console.log(`Task ${taskId} updated to ${newStatus}`);
       }
       setSelectColor(this, newStatus);
+      filteredBy(currentFilter);
     });
   }
 }
@@ -83,7 +104,6 @@ function setSelectColor(select, status) {
     select.style.backgroundColor = "blue";
   } else if (status === "Completed") {
     select.style.backgroundColor = "green";
-    console.log("CHANGED", this.value);
   } else if (status === "Overdue") {
     select.style.backgroundColor = "red";
   }
